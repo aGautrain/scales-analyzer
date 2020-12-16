@@ -1,7 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
+import { generateAll12Scales, majorScalePattern } from './scales';
 
 function App() {
+
+
+  const scales = generateAll12Scales(majorScalePattern);
+  console.info(scales);
+
   return (
     <div className="App">
       <header className="App-header">
