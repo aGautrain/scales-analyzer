@@ -1,30 +1,48 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { makeStyles } from '@material-ui/core/styles';
 import { generateAll12Scales, majorScalePattern } from './scales';
+import ScaleTable from './ScaleTable';
+import PianoCanvas from './PianoCanvas'
+
+const useStyles = makeStyles({
+  title: {
+    textAlign: 'center'
+  }
+});
 
 function App() {
 
+  const classes = useStyles();
 
-  const scales = generateAll12Scales(majorScalePattern);
-  console.info(scales);
+  const majorScales = generateAll12Scales(majorScalePattern);
+  //const minorScales = generateAll12Scales(minorScalePattern);
+
+  const [focusDegree, setFocusDegree] = React.useState(undefined);
+
+  /* const matchFocusDegree = React.useCallback((degree) => {
+    return degree?.notes?.length && degree.notes.find((note) => note.equals(focusDegree?.notes[0]))
+  }, [focusDegree]) */
+
+  const matchFocusDegreeChord = React.useCallback((degree) => {
+    return degree?.chord.equals(focusDegree?.chord)
+  }, [focusDegree])
+
+  const unfocus = React.useCallback(() => {
+    setFocusDegree(undefined)
+  }, [setFocusDegree])
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h2 className={classes.title}>Major scales</h2>
+      <ScaleTable scales={majorScales} focusedDegree={focusDegree} unfocusFn={unfocus} focusFn={setFocusDegree} matchChordFn={matchFocusDegreeChord} />
+
+      <PianoCanvas focusedDegree={focusDegree}/>
+
+      {/*<h2 className={classes.title}>Minor scales</h2>
+      <ScaleTable scales={minorScales} />*/}
+
+    </>
   );
 }
 
